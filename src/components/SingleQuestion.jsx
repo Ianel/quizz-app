@@ -11,7 +11,7 @@ const SingleQuestion = () => {
     const navigate = useNavigate();
     const [timer, setTimer] = useState(15);
     const selectedTopic = useSelector((state) => state.topic);
-    //let questionId = parseInt(quizId);
+    const selectedLevel = useSelector((state) => state.level);
     const interval = useRef();
     const questionId = useRef();
 
@@ -19,22 +19,18 @@ const SingleQuestion = () => {
         questionId.current = parseInt(quizId);
     }, [quizId]);
 
-    //let interval = null;
-
-    console.log({ selectedTopic });
-
     const checkElapsedTime = () => {
         setTimer((prevTimer) => prevTimer - 1);
     };
 
     const getQuestion = useCallback(() => {
-        let question = quizData[selectedTopic].filter(
+        let question = quizData[selectedTopic][selectedLevel].filter(
             (data) => data.id + 1 == parseInt(quizId)
         );
 
         console.log("Question", question[0]);
         setSingleQuestion(question[0]);
-    }, [quizId, selectedTopic]);
+    }, [quizId, selectedTopic, selectedLevel]);
 
     const checkAnswer = useCallback(
         (isCorrect) => {
@@ -54,7 +50,10 @@ const SingleQuestion = () => {
         if (timer == 0) {
             navigate("/");
 
-            if (questionId.current >= quizData[selectedTopic].length) {
+            if (
+                questionId.current >=
+                quizData[selectedTopic][selectedLevel].length
+            ) {
                 navigate("/quiz/result");
             } else {
                 navigate(`quiz/${++questionId.current}`);
@@ -63,7 +62,14 @@ const SingleQuestion = () => {
         }
 
         return () => clearInterval(interval.current);
-    }, [getQuestion, checkAnswer, timer, navigate, selectedTopic]);
+    }, [
+        getQuestion,
+        checkAnswer,
+        timer,
+        navigate,
+        selectedTopic,
+        selectedLevel,
+    ]);
 
     return (
         <div className="h-screen relative flex flex-col justify-center items-center">
@@ -97,7 +103,8 @@ const SingleQuestion = () => {
 
                                     if (
                                         questionId.current >=
-                                        quizData[selectedTopic].length
+                                        quizData[selectedTopic][selectedLevel]
+                                            .length
                                     ) {
                                         navigate("/quiz/result");
                                     } else {

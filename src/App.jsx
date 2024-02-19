@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import ResultScore from "./pages/ResultScore";
 import Error404 from "./components/Error404";
 import TopicChoice from "./pages/TopicChoice";
+import LevelChoice from "./pages/LevelChoice";
 
 function App() {
     const router = createBrowserRouter(
@@ -32,6 +33,11 @@ function App() {
                 <Route
                     path="quiz/topics"
                     element={<TopicChoice />}
+                    errorElement={<Error404 />}
+                />
+                <Route
+                    path="quiz/levels"
+                    element={<LevelChoice />}
                     errorElement={<Error404 />}
                 />
             </>
